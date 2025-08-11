@@ -52,3 +52,27 @@ Cypress.Commands.add('loginApiAssessor', () => {
 
     cy.visit('https://dev-ecsa.looksocial.dev/dashboard');
 });
+
+Cypress.Commands.add('loginApiRoleAdmin', () => {
+    cy.request({
+        method: 'POST',
+        url: 'https://dev-ecsa-api.looksocial.dev/api/v1/auth/login',
+        body: {
+            username: 'rit@looksocial.dev',
+            password: 'Bcp1234!',
+        },
+    }).then((response) => {
+        const accessToken = response.body.data.access_token;
+        const refreshToken = response.body.data.refresh_token;
+        const role = 'ADMIN_ICD_JUNIOR';
+
+        cy.setCookie('access_token', accessToken);
+        cy.setCookie('refresh_token', refreshToken);
+        cy.setCookie('role', role);
+
+        cy.getCookie('access_token').should('have.property', 'value', accessToken);
+        cy.getCookie('refresh_token').should('have.property', 'value', refreshToken);
+    });
+
+    cy.visit('https://dev-ecsa.looksocial.dev/dashboard');
+});
