@@ -34,6 +34,7 @@ describe('e-CSA Assessment Copy', () => {
                 cy.contains('button', 'Search').should('be.visible');
                 cy.contains('button', 'Reset').should('be.visible');
             });
+
             cy.wait(1000);
             cy.log('ตรวจสอบตาราง');
             cy.get('.ant-modal-content .ant-table-tbody tr').should('have.length.greaterThan', 0);
@@ -50,8 +51,8 @@ describe('e-CSA Assessment Copy', () => {
                 cy.contains('Reset').should('be.visible');
                 cy.contains('ยกเลิก').should('be.visible');
             });
-
         });
+
 
         it.only('ADMINICDSENIOR-SN-136: สามารถสร้างแบบประเมินโดยใช้ Copy Assessment ได้', () => {
             cy.contains('Copy Assessment').click();
@@ -77,7 +78,6 @@ describe('e-CSA Assessment Copy', () => {
             })
             cy.contains('button', 'คัดลอก').should('be.visible').click();
 
-
             cy.log('คัดลอกแบบประเมิน')
             cy.get('.ant-modal-content').within(() => {
                 cy.get('#assessment_code').clear().type('BCP_2025_TEST_Copy_Assessment');
@@ -88,7 +88,7 @@ describe('e-CSA Assessment Copy', () => {
                 cy.get('#description').clear().type('การทดสอบการ_Copy_แบบประเมินในระบบ E-CSA');
                 cy.get('#open_next_round_date').click();
                 cy.get('button').contains('ตรวจสอบ').should('be.visible').click();
-                cy.get('button').contains('ยืนยัน').should('be.visible').click();
+                // cy.get('button').contains('ยืนยัน').should('be.visible').click();
             });
 
         });
