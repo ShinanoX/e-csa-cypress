@@ -406,5 +406,77 @@ describe('e-CSA Role Admin ICD Junior', () => {
         cy.log('✅ ค้นหาแบบรวมหลายเงื่อนไขสำเร็จ');
       });
     });
+
+    it('ADMINICDSENIOR-SN-154-155-156-157-158-159-160', () => {
+      cy.get('#assessment_code').type('BCP_Test_Edit_For_Draft');
+      cy.contains('button', 'Search').click();
+      cy.wait(2000);
+      cy.get('.ant-table-tbody tr').first().within(() => {
+        cy.get('.ant-table-cell').eq(1).click();
+      });
+      cy.wait(2000);
+      cy.contains('แก้ไขแบบประเมิน').should('be.visible').click();
+
+      // กำหนดจำนวน Section ที่ต้องการสร้าง
+      const sectionGroups = [
+        { tab: 1, name: 'I การควบคุมภายในองค์กร (Control Environment)' },
+        { tab: 2, name: 'II การประเมินความเสี่ยง (Risk Assessment)' },
+        { tab: 3, name: 'III การควบคุมการปฎิบัติงาน (Control Activities)' },
+        { tab: 4, name: 'IV ระบบสารสนเทศและการสื่อสารข้อมูล (Information & Communication)' },
+        { tab: 5, name: 'V ระบบติดตาม (Monitoring & Activities)' }
+      ];
+      const widgetsInSection = [
+        'Yes/No',
+        'Choice',
+        'Checkbox',
+        'Text',
+        'Rating',
+        'Ranking',
+        'Date'
+      ];
+      const dataTransfer = new DataTransfer();
+      cy.contains('Section').trigger('dragstart', { dataTransfer });
+      cy.wait(1000);
+      cy.get('.ant-form > .p-4')
+        .trigger('drop', { dataTransfer, force: true })
+        .trigger('dragend', { dataTransfer, force: true });
+      cy.wait(1000);
+
+      widgetsInSection.forEach((text) => {
+        cy.contains(text).first().trigger('dragstart', { dataTransfer });
+        cy.get('.border.p-2.w-full.rounded.transition-colors.duration-200.border-gray-200')
+          .last()
+          .find('.gap-4')
+          .first()
+          .trigger('drop', { dataTransfer, force: true })
+          .trigger('dragend', { dataTransfer, force: true });
+        cy.wait(1000);
+      });
+
+      cy.contains('ยืนยันการสร้างแบบประเมิน').click();
+      cy.wait(2000);
+      cy.get('.p-6').should('be.visible').within(() => {
+        cy.contains('ไม่สามารถสร้างแบบประเมินประจำปี').should('be.visible');
+        cy.contains('ปิด').click();
+      });
+
+      cy.wait(2000);
+      cy.log('ตรวจสอบ validation ของแต่ละข้อ');
+      cy.get('.border.p-2.w-full.rounded.transition-colors.duration-200.border-gray-200').each(($section) => {
+        cy.wrap($section).within(() => {
+          // ตรวจสอบ validation ชื่อ Section (ถ้ามี)
+          cy.get('.ant-form-item-explain-error').filter((i, el) => el.innerText.includes('กรุณากรอกชื่อ Section'))
+            .should('have.length.at.least', 0);
+
+          // ตรวจสอบ validation คำถาม (ทุก widget)
+          cy.get('.ant-form-item-explain-error').filter((i, el) => el.innerText.includes('กรุณากรอกข้อมูล'))
+            .should('have.length.greaterThan', 0);
+
+          // ตรวจสอบ validation ผู้ประเมิน
+          cy.get('.ant-form-item-explain-error').filter((i, el) => el.innerText.includes('กรุณาเลือกผู้ประเมินอย่างน้อย 1 คน'))
+            .should('have.length.greaterThan', 0);
+        });
+      });
+    });
   })
 })

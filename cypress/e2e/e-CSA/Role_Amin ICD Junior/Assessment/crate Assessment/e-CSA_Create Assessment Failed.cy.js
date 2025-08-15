@@ -1,6 +1,7 @@
 describe('5.2 Create Assessment', () => {
     const searchData = {
-        assessment_code: 'BCP_Test_Edit_For_Draft'
+        assessment_code: 'BCP_Test_Edit_For_Copy',
+        edit_assessment_code: 'BCP_Test_Edit_For_Draft',
     };
 
     beforeEach(() => {
@@ -74,7 +75,7 @@ describe('5.2 Create Assessment', () => {
                 cy.log('✅ ค้นหาตามรหัสแบบประเมินสำเร็จ');
                 // ตรวจสอบผลลัพธ์การค้นหา
                 cy.get('.ant-table-tbody tr').should('have.length.greaterThan', 0);
-                cy.get('.ant-table-tbody tr').first().should('contain', searchData.assessment_code);
+                cy.get('.ant-table-tbody tr').first().should('contain', searchData.edit_assessment_code);
                 cy.wait(1000);
                 cy.get('.ant-table-tbody tr input.ant-radio-input').click({ force: true });
                 cy.contains('button', 'ถัดไป').should('be.visible').click();
@@ -118,10 +119,10 @@ describe('5.2 Create Assessment', () => {
                 cy.contains('ปิด').click();
             });
             cy.get('.text-red-500').should('contain', 'โปรดเพิ่ม Section อย่างน้อย 1 Section ภายใต้องค์ประกอบนี้');
-
         });
 
-        it.only('ADMINICDSENIOR-SN-145-146-147-148-149-150-151-152', () => {
+        //copy
+        it('ADMINICDSENIOR-SN-145-146-147-148-149-150-151-152-153', () => {
             cy.contains('Copy Assessment').click();
             cy.get('.ant-modal-content').should('be.visible');
             cy.get('.ant-modal-content').within(() => {
@@ -139,36 +140,42 @@ describe('5.2 Create Assessment', () => {
                 cy.get('button[type="submit"]').contains('ยืนยัน').click();
             });
             cy.wait(2000);
-
-            // กำหนดจำนวน Section ที่ต้องการสร้าง
-            const widgetsInSection = [
-                'Yes/No',
-                'Choice',
-                'Checkbox',
-                'Text',
-                'Rating',
-                'Ranking',
-                'Date'
-            ];
-            const dataTransfer = new DataTransfer();
-            cy.contains('Section').trigger('dragstart', { dataTransfer });
-            cy.wait(1000);
-            cy.get('.ant-form > .p-4')
-                .trigger('drop', { dataTransfer, force: true })
-                .trigger('dragend', { dataTransfer, force: true });
-            cy.wait(1000);
-
-            widgetsInSection.forEach((text) => {
-                cy.contains(text).first().trigger('dragstart', { dataTransfer });
-                cy.get('.border.p-2.w-full.rounded.transition-colors.duration-200.border-gray-200')
-                    .last()
-                    .find('.gap-4')
-                    .first()
-                    .trigger('drop', { dataTransfer, force: true })
-                    .trigger('dragend', { dataTransfer, force: true });
-                cy.wait(1000);
+            cy.contains('ยืนยันการสร้างแบบประเมิน').click();
+            cy.wait(2000);
+            cy.get('.p-6').should('be.visible').within(() => {
+                cy.contains('ไม่สามารถสร้างแบบประเมินประจำปี').should('be.visible');
+                cy.contains('ปิด').click();
             });
 
+            cy.wait(2000);
+            cy.log('ตรวจสอบ validation ของแต่ละข้อ');
+            cy.get('.border.p-2.w-full.rounded.transition-colors.duration-200.border-gray-200').each(($section) => {
+                cy.wrap($section).within(() => {
+                    // ตรวจสอบ validation ชื่อ Section (ถ้ามี)
+                    cy.get('.ant-form-item-explain-error').filter((i, el) => el.innerText.includes('กรุณากรอกชื่อ Section'))
+                        .should('have.length.at.least', 0);
+
+                    // ตรวจสอบ validation คำถาม (ทุก widget)
+                    cy.get('.ant-form-item-explain-error').filter((i, el) => el.innerText.includes('กรุณากรอกข้อมูล'))
+                        .should('have.length.greaterThan', 0);
+
+                    // ตรวจสอบ validation ผู้ประเมิน
+                    cy.get('.ant-form-item-explain-error').filter((i, el) => el.innerText.includes('กรุณาเลือกผู้ประเมินอย่างน้อย 1 คน'))
+                        .should('have.length.greaterThan', 0);
+                });
+            });
+        });
+        //edit
+        it.only('ADMINICDSENIOR-SN-154-155-156-157-158-159-160', () => {
+            cy.get('#assessment_code').type('BCP_Test_Edit_For_Draft');
+            cy.contains('button', 'Search').click();
+            cy.wait(2000);
+            cy.get('.ant-table-tbody tr').first().within(() => {
+                cy.get('.ant-table-cell').eq(1).click();
+            });
+            cy.wait(2000);
+            cy.contains('แก้ไขแบบประเมิน').should('be.visible').click();
+            //
             cy.contains('ยืนยันการสร้างแบบประเมิน').click();
             cy.wait(2000);
             cy.get('.p-6').should('be.visible').within(() => {

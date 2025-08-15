@@ -20,7 +20,7 @@ describe('5.2 Create Assessment', () => {
     });
 
     describe('5.2.1 Create Assessment by Create New Assessment', () => {
-        it.only('ADMINICDSENIOR-SN-134: สามารถสร้างแบบประเมินใหม่ได้', () => {
+        it('ADMINICDSENIOR-SN-134: สามารถสร้างแบบประเมินใหม่ได้', () => {
             cy.visit('https://dev-ecsa.looksocial.dev/assessment');
             cy.url().should('include', '/assessment');
             cy.get('.bg-white\\/90').should('be.visible');
@@ -46,6 +46,7 @@ describe('5.2 Create Assessment', () => {
                 // cy.wait(2000)
                 cy.get('#open_next_round_date').click();
                 cy.get('button').contains('ตรวจสอบ').should('be.visible').click();
+                cy.wait(1000);
                 cy.get('button[type="submit"]').should('not.be.disabled');
                 cy.get('button[type="submit"]').should('not.have.attr', 'disabled');
                 cy.log('✅ ปุ่มยืนยันสามารถใช้งานได้หลังจากกดตรวจสอบ');
@@ -231,7 +232,6 @@ describe('5.2 Create Assessment', () => {
             cy.get('.flex.gap-4.w-full.overflow-x-auto.py-4.scrollbar-thin.scrollbar-thumb-gray-400.scrollbar-track-gray-200 > :nth-child(2)').click();
             cy.contains('II การประเมินความเสี่ยง (Risk Assessment)').should('be.visible');
             cy.wait(2000);
-
             for (let i = 0; i < sectionCount; i++) {
                 const dataTransfer = new DataTransfer();
                 cy.contains('Section').trigger('dragstart', { dataTransfer });
@@ -256,7 +256,6 @@ describe('5.2 Create Assessment', () => {
             cy.get('.flex.gap-4.w-full.overflow-x-auto.py-4.scrollbar-thin.scrollbar-thumb-gray-400.scrollbar-track-gray-200 > :nth-child(3)').click();
             cy.contains('III การควบคุมการปฎิบัติงาน (Control Activities)').should('be.visible');
             cy.wait(2000);
-
             for (let i = 0; i < sectionCount; i++) {
                 const dataTransfer = new DataTransfer();
                 cy.contains('Section').trigger('dragstart', { dataTransfer });
@@ -281,7 +280,6 @@ describe('5.2 Create Assessment', () => {
             cy.get('.flex.gap-4.w-full.overflow-x-auto.py-4.scrollbar-thin.scrollbar-thumb-gray-400.scrollbar-track-gray-200 > :nth-child(4)').click();
             cy.contains('IV ระบบสารสนเทศและการสื่อสารข้อมูล (Information & Communication)').should('be.visible');
             cy.wait(2000);
-
             for (let i = 0; i < sectionCount; i++) {
                 const dataTransfer = new DataTransfer();
                 cy.contains('Section').trigger('dragstart', { dataTransfer });
@@ -302,10 +300,10 @@ describe('5.2 Create Assessment', () => {
                     cy.wait(1000);
                 });
             }
+
             cy.get('.flex.gap-4.w-full.overflow-x-auto.py-4.scrollbar-thin.scrollbar-thumb-gray-400.scrollbar-track-gray-200 > :nth-child(5)').click();
             cy.contains('V ระบบติดตาม (Monitoring & Activities)').should('be.visible');
             cy.wait(2000);
-
             for (let i = 0; i < sectionCount; i++) {
                 const dataTransfer = new DataTransfer();
                 cy.contains('Section').trigger('dragstart', { dataTransfer });
@@ -329,5 +327,4 @@ describe('5.2 Create Assessment', () => {
 
         });
     })
-
 });

@@ -15,7 +15,4 @@ describe('e-CSA Assessment Copy', () => {
         cy.wait(2000);
     });
 
-    const searchData = {
-        assessment_code: 'BCP_Test_Edit_For_Draft'
-    };
 })
