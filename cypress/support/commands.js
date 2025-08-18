@@ -40,7 +40,7 @@ Cypress.Commands.add('loginApiAssessor', () => {
     }).then((response) => {
         const accessToken = response.body.data.access_token;
         const refreshToken = response.body.data.refresh_token;
-        const role = 'ADMIN_ICD_JUNIOR';
+        const role = 'ASSESSOR';
 
         cy.setCookie('access_token', accessToken);
         cy.setCookie('refresh_token', refreshToken);

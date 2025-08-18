@@ -1,4 +1,4 @@
-describe('5.4.1 Cancel Assessment Success ', () => {
+describe('5.4.2 Cancel Assessment Failed ', () => {
 
     beforeEach(() => {
         cy.loginApiRoleAdmin();
@@ -18,7 +18,7 @@ describe('5.4.1 Cancel Assessment Success ', () => {
     });
 
     describe('5.4.1 Cancel Assessment Success', () => {
-        it('ADMINICDJUNIOR-SN-164 : สามารถยกเลิกแบบประเมินที่หน้าแบบประเมินทั้งหมดได้', () => {
+        it('ADMINICDJUNIOR-SN-166 : สามารถยกเลิกแบบประเมินที่หน้าแบบประเมินทั้งหมดได้', () => {
             //ค้นหาแบบประเมินที่จะแก้ไข
             cy.get('#assessment_code').type('BCP_Test_สำหรับยกเลิกแบบประเมิน');
             cy.contains('button', 'Search').click();
@@ -30,19 +30,20 @@ describe('5.4.1 Cancel Assessment Success ', () => {
             cy.wait(2000);
 
             cy.get('.ant-modal-content').within(() => {
-                cy.get('#remark').type('ต้องทดสอบยกเลิกแบบประเมิน');
+                // cy.get('#remark').type('ต้องทดสอบยกเลิกแบบประเมิน');
                 cy.contains('กรุณาระบุเหตุผลที่ทำการยกเลิกแบบประเมินฉบับนี้').should('be.visible');
                 cy.contains('ยืนยัน')
                     .should('be.visible')
-                // .click();
+                    .click();
                 cy.contains('ยกเลิก')
                     .should('be.visible')
                 // .click();
+                cy.get('.ant-form-item-explain-error').should('have.text', 'กรุณากรอกข้อมูล');
             });
 
         });
 
-        it.only('ADMINICDJUNIOR-SN-165 : สามารถยกเลิกแบบประเมินที่หน้าแบบประเมินทั้งหมดได้', () => {
+        it('ADMINICDJUNIOR-SN-167 : สามารถยกเลิกแบบประเมินที่หน้าแบบประเมินทั้งหมดได้', () => {
             //ค้นหาแบบประเมินที่จะแก้ไข
             cy.get('#assessment_code').type('BCP_Test_สำหรับยกเลิกแบบประเมิน');
             cy.contains('button', 'Search').click();
@@ -53,14 +54,15 @@ describe('5.4.1 Cancel Assessment Success ', () => {
             cy.get('.ant-dropdown-trigger > .rounded-md').contains('เพิ่มเติม').click();
             cy.get('.ant-dropdown-menu-item').contains('ยกเลิกแบบประเมิน').should('be.visible').click();
             cy.get('.ant-modal-content').within(() => {
-                cy.get('#remark').type('ต้องทดสอบยกเลิกแบบประเมิน');
+                // cy.get('#remark').type('ต้องทดสอบยกเลิกแบบประเมิน');
                 cy.contains('กรุณาระบุเหตุผลที่ทำการยกเลิกแบบประเมินฉบับนี้').should('be.visible');
                 cy.contains('ยืนยัน')
                     .should('be.visible')
-                // .click();
+                    .click();
                 cy.contains('ยกเลิก')
                     .should('be.visible')
                 // .click();
+                cy.get('.ant-form-item-explain-error').should('have.text', 'กรุณากรอกข้อมูล');
             });
 
         });
