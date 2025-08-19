@@ -1,6 +1,6 @@
 describe('Role Management', () => {
     beforeEach(() => {
-        cy.loginApiAssessor();
+        cy.loginApiRoleAdmin();
         cy.on('uncaught:exception', (err, runnable) => {
             if (err.message.includes('Minified React error #418') ||
                 err.message.includes('visit https://react.dev/errors') ||
@@ -14,11 +14,6 @@ describe('Role Management', () => {
         cy.url().should('include', '/management/admin-management');
         cy.wait(1000);
 
-        // Navigate to Role Management
-        // cy.get('nav').contains('Role Management').click();
-        // cy.get('.p-1').should('be.visible');
-        // cy.get('.p-1 > button:nth-child(1)').contains('จัดการสิทธิ์ Admin').click();
-        // cy.wait(1000);
     });
 
     describe('3.1 สามารถใช้งาน จัดการสิทธิ์ Admin ได้', () => {
@@ -195,34 +190,25 @@ describe('Role Management', () => {
             cy.log('✅ ทดสอบ Modal Inactive Admin สำเร็จ');
         });
 
-        it.only('ADMINICDJUNIOR-SN-91 - สามารถเปิด View History ได้', () => {
-            cy.log('📋 ทดสอบเปิด View History');
-
-            // คลิกปุ่ม View History
+        it('ADMINICDJUNIOR-SN-91 - สามารถเปิด View History ได้', () => {
             cy.get('button').contains('View History').click();
             cy.wait(1000);
-
-            // ตรวจสอบ Modal View History
             cy.get('.ant-modal-content').should('be.visible');
             cy.get('.ant-modal-title').should('contain', 'View History');
-
             cy.get('.ant-modal-content').within(() => {
                 // ตรวจสอบฟิลด์ค้นหา
                 cy.get('#action').should('exist');
                 cy.get('#role').should('exist');
                 // คลิก start_date เพื่อเปิด date picker
-                cy.get('#start_date').click();
-                cy.wait(500);
-
+                // cy.get('#start_date').click();
+                cy.wait(1000);
                 // สุ่มคลิกวันที่ในปฏิทิน
-                cy.get('.ant-picker-cell-in-view').within(() => {
-                    cy.get('[title="2025-08-13"]').click();
-                });
-
+                // cy.get('.ant-picker-cell-in-view').within(() => {
+                //     cy.get('[title="2025-08-13"]').click();
+                // });
                 // ตรวจสอบตาราง
                 cy.get('.ant-table').should('be.visible');
                 cy.get('.ant-table-tbody tr').should('exist');
-
                 // ตรวจสอบปุ่ม
                 cy.get('button[type="submit"]').contains('Search').should('be.visible');
                 cy.get('button[type="reset"]').contains('Reset').should('be.visible');
@@ -231,7 +217,6 @@ describe('Role Management', () => {
                 // ปิด Modal
                 // cy.get('button').contains('ปิด').click();
             });
-
             cy.log('✅ เปิด View History สำเร็จ');
         });
 

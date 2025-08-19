@@ -1,6 +1,6 @@
 describe('Maximum Extend', () => {
     beforeEach(() => {
-        cy.loginApiAssessor();
+        cy.loginApiRoleAdmin();
         cy.on('uncaught:exception', (err, runnable) => {
             if (err.message.includes('Minified React error #418') ||
                 err.message.includes('visit https://react.dev/errors') ||
@@ -14,17 +14,7 @@ describe('Maximum Extend', () => {
         cy.url().should('include', '/master-data/maximum-extend');
     });
 
-    describe('2.3.1 Maximum Extend Success', () => {
-        it('ADMINICDJUNIOR-SN-36 - สามารถกำหนดจำนวนวันสูงสุดที่ระบบจะยอมขยายเวลาตอบแบบประเมินให้ผู้ประเมินได้', () => {
-            cy.get('#config_value').clear().type('30');
-            cy.contains('ยืนยัน').click();
-
-            cy.get('.gap-6').should('contain', 'บันทึกการเปลี่ยนแปลงจำนวนวันสูงสุดที่ระบบจะยอมขยายเวลาให้ผู้ประเมิน (Maximum Extend) เป็น 30 วันสำเร็จ');
-            cy.contains('ปิด').click();
-        });
-    })
-
-    describe.only('2.3.2 Maximum Extend Failed', () => {
+    describe('2.3.2 Maximum Extend Failed', () => {
         it.only('ADMINICDJUNIOR-SN-37 - ไม่สามารถกำหนดจำนวนวันสูงสุดที่ระบบจะยอมขยายเวลาตอบแบบประเมินให้ผู้ประเมินได้ เมื่อกรอกข้อมูลไม่ถูกต้อง', () => {
             cy.log('ไม่กรอกข้อมูล');
             cy.get('#config_value').clear();

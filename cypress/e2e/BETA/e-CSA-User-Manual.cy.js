@@ -195,6 +195,7 @@ describe('e-CSA User Manual', () => {
         });
     })
 
+
     it('TC-UM-001: ทดสอบหน้า User Manual และข้อมูลในตาราง', () => {
         cy.log('✅ ทดสอบหน้า User Manual โหลดข้อมูลถูกต้อง');
 

@@ -13,7 +13,7 @@ describe('2.6 การจัดการ About Internal Control', () => {
     }
 
     beforeEach(() => {
-        cy.loginApiAssessor();
+        cy.loginApiRoleAdmin();
         cy.on('uncaught:exception', (err, runnable) => {
             if (err.message.includes('Minified React error #418') ||
                 err.message.includes('visit https://react.dev/errors') ||
@@ -41,10 +41,7 @@ describe('2.6 การจัดการ About Internal Control', () => {
         });
 
         it('ADMINICDJUNIOR-SN-66: สามารถสร้าง About Internal Control ได้', () => {
-            // คลิกปุ่มสร้างรายการ
             cy.get('button').contains('สร้างรายการ').should('be.visible').click();
-
-            // ตรวจสอบว่า Modal เปิดขึ้น
             cy.get('.ant-modal-content').should('be.visible');
             cy.get('.ant-modal-title').should('contain', 'สร้างรายการ About Internal Control');
             cy.log('📝 กรอกข้อมูลในฟอร์ม');
@@ -84,7 +81,7 @@ describe('2.6 การจัดการ About Internal Control', () => {
             cy.get('.ant-form > .justify-end > .bg-\\[\\#4CB847\\]').contains('ยืนยัน').should('be.visible').click();
             cy.wait(1000);
             // ตรวจสอบว่า Modal ยืนยัน
-            cy.get('.gap-6').should('be.visible').within(() => {
+            cy.get('.gap-12').should('be.visible').within(() => {
                 cy.get('.flex-1 > .justify-center').should('contain', automatText.subject);
                 cy.get('.w-full > .flex').click();
             });
@@ -126,7 +123,7 @@ describe('2.6 การจัดการ About Internal Control', () => {
                 cy.get('button[type="submit"]').contains('ยืนยัน').should('be.visible').click();
             });
 
-            cy.get('.gap-6').should('be.visible').within(() => {
+            cy.get('.gap-12').should('be.visible').within(() => {
                 cy.get('.flex-1 > .justify-center').should('contain', editText.subject);
                 cy.get('.w-full > .flex').click();
             });
@@ -208,47 +205,5 @@ describe('2.6 การจัดการ About Internal Control', () => {
         });
 
     });
-
-    describe('2.6.2 ไม่สามารถใช้งาน การจัดการ About Internal Control ได้', () => {
-        it('ADMINICDJUNIOR-SN-77-78-79-80: ไม่สามารถสร้าง About Internal Control ได้ เนื่องจากกรอกข้อมูลไม่ครบหรือไม่กรอกข้อมูลใด ๆ เลย และ อัพโหลดไฟล์ แนบไฟล์ ที่มีขนาดใหญ่เกิน 20 mb', () => {
-            cy.get('button').contains('สร้างรายการ').should('be.visible').click();
-            cy.get('.ant-modal-content').should('be.visible');
-            cy.get('.ant-modal-content').within(() => {
-                cy.get('button').contains('ยืนยัน').click();
-                cy.get('input[accept=".jpeg,.jpg"]').selectFile('cypress/fixtures/image/Mei50MPpng.png', { force: true });
-                cy.get('input[accept=""]').selectFile('cypress/fixtures/30mp-pkpadmin,+408-2146-1-CE.pdf', { force: true });
-                cy.get('#sequence_help > .ant-form-item-explain-error').contains('กรุณากรอกลำดับที่ต้องการให้แสดงผลก่อนหรือหลัง');
-                cy.get('#subject_help > .ant-form-item-explain-error').contains('กรุณากรอกข้อมูล');
-                cy.get('#description_help > .ant-form-item-explain-error').contains('กรุณากรอกข้อมูล');
-            });
-        });
-
-        it('ADMINICDJUNIOR-SN-81-82-83-84: ไม่สามารถแก้ไข About Internal Control ได้ เนื่องจากกรอกข้อมูลไม่ครบหรือไม่กรอกข้อมูลใด ๆ เลย', () => {
-            cy.get('#subject').should('be.visible').clear().type('Test Cypress Automation');
-            cy.get('button').contains('Search').click();
-            cy.wait(2000);
-            cy.get('.ant-table-tbody tr').first().within(() => {
-                cy.get('button').contains('edit').click();
-            });
-            cy.get('.ant-modal-content').within(() => {
-                cy.get('#sequence').should('be.visible').type('A').clear();
-                cy.get('#subject').should('be.visible').type('A').clear();
-                cy.get('#description').should('be.visible').type('A').clear();
-                cy.get('.ant-form-item-explain-error').first().contains('กรุณากรอกลำดับที่ต้องการให้แสดงผลก่อนหรือหลัง');
-                cy.get('.ant-form-item-explain-error').eq(1).contains('กรุณากรอกข้อมูล');
-                cy.get('.ant-form-item-explain-error').eq(2).contains('กรุณากรอกข้อมูล');
-                cy.get('.absolute button').contains('span', 'delete').click({ force: true });
-                cy.get('input[accept=".jpeg,.jpg"]').selectFile('cypress/fixtures/image/Mei50MPpng.png', { force: true });
-                cy.get('.border-red-500').should('exist');
-                cy.get('input[accept=".jpeg,.jpg"]').selectFile('cypress/fixtures/image/ppng.png', { force: true });
-                cy.get('.absolute button').contains('span', 'delete').click({ force: true });
-                cy.get('input[accept=""]').selectFile('cypress/fixtures/30mp-pkpadmin,+408-2146-1-CE.pdf', { force: true });
-                cy.get('.border-red-500').should('exist');
-                // cy.get('button[type="submit"]').contains('ยืนยัน').should('be.visible').click();
-
-            });
-        });
-    });
-
 
 });

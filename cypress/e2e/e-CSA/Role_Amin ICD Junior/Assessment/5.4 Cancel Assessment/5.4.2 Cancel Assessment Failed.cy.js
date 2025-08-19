@@ -39,6 +39,7 @@ describe('5.4.2 Cancel Assessment Failed ', () => {
                     .should('be.visible')
                 // .click();
                 cy.get('.ant-form-item-explain-error').should('have.text', 'กรุณากรอกข้อมูล');
+                cy.wait(2000);
             });
 
         });
@@ -51,6 +52,7 @@ describe('5.4.2 Cancel Assessment Failed ', () => {
             cy.get('.ant-table-tbody tr').first().within(() => {
                 cy.get('.ant-table-cell').eq(1).click();
             });
+            cy.wait(2000);
             cy.get('.ant-dropdown-trigger > .rounded-md').contains('เพิ่มเติม').click();
             cy.get('.ant-dropdown-menu-item').contains('ยกเลิกแบบประเมิน').should('be.visible').click();
             cy.get('.ant-modal-content').within(() => {
@@ -63,6 +65,7 @@ describe('5.4.2 Cancel Assessment Failed ', () => {
                     .should('be.visible')
                 // .click();
                 cy.get('.ant-form-item-explain-error').should('have.text', 'กรุณากรอกข้อมูล');
+                cy.wait(2000);
             });
 
         });

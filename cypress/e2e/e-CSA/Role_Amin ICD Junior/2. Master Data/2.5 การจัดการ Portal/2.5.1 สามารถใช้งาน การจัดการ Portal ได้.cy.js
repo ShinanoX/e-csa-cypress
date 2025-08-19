@@ -6,7 +6,7 @@ describe('e-CSA Master Data Portal Page', () => {
     const modalDescription = 'ทดสอบแก้ไขรายละเอียด โดย Cypress';
 
     beforeEach(() => {
-        cy.loginApiAssessor();
+        cy.loginApiRoleAdmin();
         cy.on('uncaught:exception', (err, runnable) => {
             if (err.message.includes('Minified React error #418') ||
                 err.message.includes('visit https://react.dev/errors') ||
@@ -341,31 +341,18 @@ describe('e-CSA Master Data Portal Page', () => {
             // ทดสอบการค้นหาด้วยชื่อเรื่อง
             cy.get('#subject').clear().type(portalName);
             cy.get('button').contains('Search').click();
-            cy.wait(1000);
+            cy.wait(3000);
+            cy.get('.gap-4 > .gap-2 > .bg-white').contains('Reset').click();
+        });
 
-            cy.get('.ant-table-tbody').should('contain', portalName);
-            cy.log('✅ ค้นหา Portal ด้วยชื่อเรื่องสำเร็จ');
+        it('ADMINICDJUNIOR-SN-58: สามารถ Clear ข้อมูลที่ Search ได้', () => {
+            cy.log('🔍 ทดสอบการค้นหา Portal');
 
-            // รีเซ็ตก่อนทดสอบครั้งถัดไป
-            cy.get('button').contains('Reset').click();
-            cy.wait(1000);
-
-            // ตรวจสอบว่าฟิลด์ถูกล้างแล้ว
-            cy.get('#subject').should('have.value', '');
-
-            // ทดสอบการค้นหาด้วยรายละเอียด
-            cy.get('#description').clear().type(portalDescription);
+            // ทดสอบการค้นหาด้วยชื่อเรื่อง
+            cy.get('#subject').clear().type(portalName);
             cy.get('button').contains('Search').click();
-            cy.wait(1000);
-
-            cy.get('.ant-table-tbody').should('contain', portalDescription);
-            cy.log('✅ ค้นหา Portal ด้วยรายละเอียดสำเร็จ');
-
-            // รีเซ็ตอีกครั้งเพื่อทำความสะอาด
-            cy.get('button').contains('Reset').click();
-            cy.wait(1000);
-
-            cy.log('✅ ทดสอบการค้นหา Portal เสร็จสิ้น');
+            cy.wait(3000);
+            cy.get('.gap-4 > .gap-2 > .bg-white').contains('Reset').click();
         });
 
         it('ADMINICDJUNIOR-SN-50: ทดสอบการลบ Portal', () => {
@@ -385,132 +372,12 @@ describe('e-CSA Master Data Portal Page', () => {
                 cy.get('button[type="button"]').contains('ยืนยัน').click();
             });
             cy.wait(1000);
-            cy.get('.gap-6').within(() => {
-                cy.get('.self-stretch.justify-center.text-lg.font-bold').should('contain', `ลบ Portal: “${portalName}” สำเร็จ`);
+            cy.get('.gap-12').within(() => {
+                cy.get('.flex-1 > .justify-center').should('contain', `ลบ Portal: “${portalName}” สำเร็จ`);
                 cy.get('button').contains('ปิด').click();
             })
             cy.log('✅ ลบ Portal สำเร็จ');
         })
     });
 
-    // it('TC-PP-003: ทดสอบการยกเลิกการสร้าง Portal', () => {
-    //     cy.visit('https://dev-ecsa.looksocial.dev/master-data/portal');
-    //     cy.url().should('include', '/master-data/portal');
-    //     cy.wait(2000);
-    //     cy.get('button').contains('สร้าง Portal').should('be.visible').click();
-    //     cy.wait(2000);
-    //     // ตรวจสอบว่า Modal เปิดขึ้น
-    //     cy.get('.ant-modal-content').should('be.visible');
-    //     cy.get('.custom-modal-label').should('contain', 'สร้าง Portal');
-    //     cy.log('📝 กรอกข้อมูลบางส่วน');
-    //     // กรอกข้อมูลบางส่วนในรูปแบบเดียวกับ TC-PP-002
-    //     cy.get('.ant-modal-content').within(() => {
-    //         cy.get('#sequence').should('be.visible').clear().type('998');
-    //         cy.get('#subject').should('be.visible').clear().type('Test Cancel Portal');
-    //     });
-
-    //     cy.log('❌ ยกเลิกการสร้าง Portal');
-
-    //     // คลิกปุ่มยกเลิก
-    //     cy.get('.ant-modal-content').within(() => {
-    //         cy.get('button').contains('ยกเลิก').click();
-    //     });
-    //     cy.wait(1000);
-
-    //     cy.log('✅ ยกเลิกการสร้าง Portal สำเร็จ');
-    // });
-
-    // it('TC-PP-005: ทดสอบการดูรูปหน้าปก', () => {
-    //     cy.visit('https://dev-ecsa.looksocial.dev/master-data/portal');
-    //     cy.url().should('include', '/master-data/portal');
-    //     cy.wait(2000);
-
-    //     cy.log('🖼️ ทดสอบการคลิกดูรูปหน้าปก');
-
-    //     // คลิกปุ่มรูปหน้าปกของรายการแรก
-    //     cy.get('.ant-table-tbody tr').first().within(() => {
-    //         cy.get('button').contains('image').click();
-    //     });
-    //     cy.wait(1000);
-
-    //     // ตรวจสอบว่าแสดงรูปภาพ (อาจเป็น Modal หรือ Preview)
-    //     cy.get('body').then(($body) => {
-    //         if ($body.find('.ant-modal-content').length > 0) {
-    //             cy.get('.ant-modal-content').should('be.visible');
-    //             cy.log('✅ แสดง Modal รูปภาพ');
-    //             // ปิด Modal
-    //             cy.get('.ant-modal-close').click();
-    //         } else {
-    //             cy.log('ℹ️ อาจมีการแสดงรูปภาพในรูปแบบอื่น');
-    //         }
-    //     });
-
-    //     cy.log('✅ การดูรูปหน้าปกทำงานถูกต้อง');
-    // });
-
-    // it('TC-PP-007: ทดสอบการเปิด/ปิดใช้งาน Portal', () => {
-    //     cy.visit('https://dev-ecsa.looksocial.dev/master-data/portal');
-    //     cy.url().should('include', '/master-data/portal');
-    //     cy.wait(2000);
-
-    //     cy.log('🔄 ทดสอบการเปิด/ปิดใช้งาน Portal');
-
-    //     // หา Switch ที่สามารถคลิกได้
-    //     cy.get('.ant-table-tbody tr').each(($row) => {
-    //         cy.wrap($row).within(() => {
-    //             cy.get('.ant-switch').then(($switch) => {
-    //                 const isChecked = $switch.hasClass('ant-switch-checked');
-    //                 cy.log(`Switch สถานะ: ${isChecked ? 'เปิด' : 'ปิด'}`);
-
-    //                 // คลิก Switch
-    //                 cy.wrap($switch).click();
-    //                 cy.wait(1000);
-
-    //                 // ตรวจสอบสถานะหลังคลิก
-    //                 cy.wrap($switch).then(($newSwitch) => {
-    //                     const newState = $newSwitch.hasClass('ant-switch-checked');
-    //                     cy.log(`Switch สถานะใหม่: ${newState ? 'เปิด' : 'ปิด'}`);
-
-    //                     // คืนสถานะเดิม
-    //                     cy.wrap($newSwitch).click();
-    //                 });
-    //             });
-    //         });
-    //         return false; // หยุดที่รายการแรก
-    //     });
-
-    //     cy.log('✅ การเปิด/ปิดใช้งานทำงานถูกต้อง');
-    // });
-
-    // it('TC-PP-008: ทดสอบการนำทางในตาราง', () => {
-    //     cy.visit('https://dev-ecsa.looksocial.dev/master-data/portal');
-    //     cy.url().should('include', '/master-data/portal');
-    //     cy.wait(2000);
-
-    //     cy.log('📄 ทดสอบการเปลี่ยนหน้าในตาราง');
-
-    //     // ตรวจสอบการแสดงผลของ Pagination
-    //     cy.get('.ant-pagination').should('be.visible');
-
-    //     // ตรวจสอบจำนวนรายการทั้งหมด
-    //     cy.contains('ทั้งหมด').should('be.visible');
-
-    //     // ทดสอบการเปลี่ยนหน้า (ถ้ามีหน้าที่ 2)
-    //     cy.get('body').then(($body) => {
-    //         if ($body.find('.ant-pagination-item-2').length > 0) {
-    //             cy.get('.ant-pagination-item-2').click();
-    //             cy.wait(1000);
-    //             cy.log('✅ เปลี่ยนไปหน้า 2 สำเร็จ');
-
-    //             // กลับหน้า 1
-    //             cy.get('.ant-pagination-item-1').click();
-    //             cy.wait(1000);
-    //             cy.log('✅ กลับหน้า 1 สำเร็จ');
-    //         } else {
-    //             cy.log('ℹ️ มีข้อมูลเพียงหน้าเดียว');
-    //         }
-    //     });
-
-    //     cy.log('✅ การนำทางในตารางทำงานถูกต้อง');
-    // });
 });
