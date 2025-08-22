@@ -12,16 +12,10 @@ describe('Site Map', () => {
         });
         cy.visit('https://dev-ecsa.looksocial.dev/dashboard');
         cy.wait(1000);
-
-        // Navigate to Role Management
-        // cy.get('nav').contains('Role Management').click();
-        // cy.get('.p-1').should('be.visible');
-        // cy.get('.p-1 > button:nth-child(1)').contains('จัดการสิทธิ์ Admin').click();
-        // cy.wait(1000);
     });
 
     describe('Site Map', () => {
-        it('Site Map', () => {
+        it('ADMINICDJUNIOR-SN-127: แสดงหน้า Site Map ได้ถูกต้อง', () => {
             cy.contains('Site Map').should('be.visible').click();
             cy.wait(1000);
             cy.url().should('include', '/site-map');
@@ -54,6 +48,10 @@ describe('Site Map', () => {
                 cy.contains('About Internal Control').should('be.visible');
                 cy.contains('Portal').should('be.visible');
             });
+
+        });
+
+        it('ADMINICDJUNIOR-SN-128: สามารถเข้าสู่หน้าอื่นผ่าน Site Map ได้', () => {
 
         });
     });

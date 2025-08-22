@@ -42,10 +42,125 @@ describe('Role Management', () => {
                 cy.get('input#full_name').should('be.disabled');
             });
         });
-        it.only('ADMINICDSENIOR-SN-103: ไม่สามารถแก้ไขข้อมูล Admin ได้เนื่องจากกรอกข้อมูลไม่ครบหรือไม่กรอกข้อมูลใด ๆ เลย', () => {
+
+        it('ADMINICDSENIOR-SN-103: ไม่สามารถแก้ไขข้อมูล Admin ได้เนื่องจากกรอกข้อมูลไม่ครบหรือไม่กรอกข้อมูลใด ๆ เลย', () => {
             cy.get('.ant-table-tbody tr').eq(1).within(() => {
                 cy.get('button').contains('span', 'edit').click();
             });
+            cy.wait(2000)
+            cy.get('.ant-modal-content').should('be.visible').within(() => {
+                // เคลียร์ Role
+                cy.get('.ant-form-item-control-input-content')
+                    .contains('Role')
+                    .parents('.ant-form-item')
+                    .find('.ant-select-selector')
+                    .trigger('mouseover');
+                cy.get('.ant-form-item-control-input-content')
+                    .contains('Role')
+                    .parents('.ant-form-item')
+                    .find('.ant-select-clear')
+                    .click();
+
+                // เคลียร์ Initial
+                cy.get('.ant-form-item-control-input-content')
+                    .contains('Initial')
+                    .parents('.ant-form-item')
+                    .find('.ant-select-selector')
+                    .trigger('mouseover');
+                cy.get('.ant-form-item-control-input-content')
+                    .contains('Initial')
+                    .parents('.ant-form-item')
+                    .find('.ant-select-clear')
+                    .click();
+
+                // ตรวจสอบข้อความ error ของแต่ละช่อง
+                cy.get('#role_help').should('contain', 'กรุณากรอกข้อมูล');
+                cy.get('#initial_help').should('contain', 'กรุณากรอกข้อมูล');
+            });
+        });
+
+        it.only('ADMINICDSENIOR-SN-104: ไม่สามารถแก้ไขข้อมูล Admin ได้ เนื่องจาก Admin ทำการแก้ไขข้อมูลตัวเอง', () => {
+            cy.get('#full_name').type('ฤทธิ์ บุตรแสง');
+            cy.contains('Search').click();
+            cy.wait(2000);
+            cy.get('.ant-table-tbody tr').filter(':contains("ฤทธิ์ บุตรแสง")').within(() => {
+                cy.get('button').contains('span', 'edit').click();
+            });
+            cy.get('.ant-modal-content').should('be.visible').within(() => {
+                // คลิกเปิด dropdown Role
+                cy.get('.ant-form-item-control-input-content')
+                    .contains('Role')
+                    .parents('.ant-form-item')
+                    .find('.ant-select-selector')
+                    .click();
+            });
+            cy.get('.ant-select-dropdown .ant-select-item')
+                .contains('Audit')
+                .click();
+            cy.get('.flex-col.w-full > .justify-end > .bg-\\[\\#4CB847\\]').click();
+
+            cy.get('.gap-12').within(() => {
+                cy.get('.flex-1 > .justify-center').contains('แก้ไขข้อมูลไม่สำเร็จ เนื่องจากระบบไม่อนุญาตให้แก้ไขข้อมูลส่วนตัวของตนเอง').click({ force: true });
+                cy.contains('ปิด').click();
+            });
+
+        });
+
+        it('ADMINICDSENIOR-SN-105: ไม่สามารถแก้ไขข้อมูล Admin ได้ เนื่องจาก Admin ทำการแก้ไขข้อมูลตัวเอง', () => {
+            cy.get('#full_name').type('ฤทธิ์ บุตรแสง');
+            cy.contains('Search').click();
+            cy.wait(1000);
+            cy.get('.ant-table-tbody tr').eq(1).within(() => {
+                cy.get('button').contains('span', 'edit').click();
+            });
+            cy.get('.ant-modal-content').should('be.visible').within(() => {
+                // คลิกเปิด dropdown Role
+                cy.get('.ant-form-item-control-input-content')
+                    .contains('Role')
+                    .parents('.ant-form-item')
+                    .find('.ant-select-selector')
+                    .click();
+            });
+            cy.get('.ant-select-dropdown .ant-select-item')
+                .contains('Audit')
+                .click();
+            cy.get('.flex-col.w-full > .justify-end > .bg-\\[\\#4CB847\\]').click();
+
+            cy.get('.gap-12').within(() => {
+                cy.get('.flex-1 > .justify-center').contains('แก้ไขข้อมูลไม่สำเร็จ เนื่องจากระบบไม่อนุญาตให้แก้ไขข้อมูลส่วนตัวของตนเอง').click({ force: true });
+                cy.contains('ปิด').click();
+            });
+
         })
+
+        it('ADMINICDSENIOR-SN-106: ไม่สามารถลบ Admin ได้เนื่องจากไม่กรอกเหตุผลที่ต้องการจะลบ', () => {
+            cy.get('#full_name').type('สมพงษ์ สาสนทาญาติ');
+            cy.contains('Search').click();
+            cy.wait(1000);
+            cy.get('.ant-table-tbody tr').filter(':contains("สมพงษ์ สาสนทาญาติ")').find('.ant-dropdown-trigger').click();
+            cy.contains('ลบผู้ใช้งาน').click();
+
+            cy.get('.ant-modal-content').within(() => {
+                cy.get('.gap-2 > .justify-end > .bg-\\[\\#4CB847\\]').click();
+                cy.get('.ant-form > .gap-2 > :nth-child(1) > :nth-child(2)').should('contain', 'กรุณากรอกข้อมูล');
+            });
+        })
+
+        it('ADMINICDSENIOR-SN-107: ไม่สามารถแก้ไขสถานะได้ เนื่องจาก Admin ลบผู้ใช้งานตัวเอง', () => {
+            cy.get('#full_name').type('ฤทธิ์ บุตรแสง');
+            cy.contains('Search').click();
+            cy.wait(1000);
+            cy.get('.ant-table-tbody tr').filter(':contains("ฤทธิ์ บุตรแสง")').find('.ant-dropdown-trigger').click();
+            cy.contains('ลบผู้ใช้งาน').click();
+            cy.get('.ant-modal-content').within(() => {
+                cy.get('#remark').type('ทดสอบการลบ Role')
+                cy.get('.gap-2 > .justify-end > .bg-\\[\\#4CB847\\]').click();
+            });
+            cy.get('.gap-12').within(() => {
+                cy.contains('ลบผู้ใช้งานไม่สำเร็จ เนื่องจากระบบไม่อนุญาตให้แก้ไขข้อมูลส่วนตัวของตนเอง').should('be.visible');
+                // cy.contains('ปิด').click();
+            });
+        })
+
     });
 });

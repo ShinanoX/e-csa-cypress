@@ -26,7 +26,7 @@ describe('5.5 ตรวจสอบการทำงานที่หน้า
             cy.get('.justify-start > .gap-2 > .bg-\\[\\#4CB847\\]').click();
         });
 
-        it.only('ADMINICDJUNIOR-SN-110: สามารถดาวน์โหลด User Manual ได้', () => {
+        it('ADMINICDJUNIOR-SN-110: สามารถดาวน์โหลด User Manual ได้', () => {
             cy.get('.border > .flex-col > .flex').contains('คลิกที่นี่').should('be.visible').click();
         });
 

@@ -1,4 +1,4 @@
-describe('e-CSA Assessment Copy', () => {
+describe('Create Assessment', () => {
     beforeEach(() => {
         cy.loginApiRoleAdmin();
         cy.on('uncaught:exception', (err, runnable) => {
@@ -61,7 +61,7 @@ describe('e-CSA Assessment Copy', () => {
 
     })
 
-    describe.only('5.2.3 Create Assessment by Copy Assessment', () => {
+    describe('5.2.3 Create Assessment by Copy Assessment', () => {
 
         it('ADMINICDSENIOR-SN-136: สามารถสร้างแบบประเมินโดยใช้ Copy Assessment ได้', () => {
             cy.contains('Copy Assessment').click();
@@ -144,7 +144,7 @@ describe('e-CSA Assessment Copy', () => {
             });
         });
 
-        it.only('ADMINICDSENIOR-SN-138: สามารถ Clear ข้อมูลที่ Search ที่ Copy Assessment ได้', () => {
+        it('ADMINICDSENIOR-SN-138: สามารถ Clear ข้อมูลที่ Search ที่ Copy Assessment ได้', () => {
             cy.contains('Copy Assessment').click();
             cy.get('.ant-modal-content').should('be.visible');
             cy.log('🔍 ทดสอบการค้นหาใน Copy Assessment Modal');

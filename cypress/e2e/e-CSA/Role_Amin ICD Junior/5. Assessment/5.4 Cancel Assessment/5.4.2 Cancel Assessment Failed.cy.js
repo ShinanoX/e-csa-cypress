@@ -18,7 +18,7 @@ describe('5.4.2 Cancel Assessment Failed ', () => {
     });
 
     describe('5.4.1 Cancel Assessment Success', () => {
-        it('ADMINICDJUNIOR-SN-166 : สามารถยกเลิกแบบประเมินที่หน้าแบบประเมินทั้งหมดได้', () => {
+        it('ADMINICDJUNIOR-SN-166 : ไม่สามารถยกเลิกแบบประเมินที่หน้าแบบประเมินทั้งหมดได้ เนื่องจากไม่ได้กรอกเหตุผลที่ทำการยกเลิกแบบประเมิน', () => {
             //ค้นหาแบบประเมินที่จะแก้ไข
             cy.get('#assessment_code').type('BCP_Test_สำหรับยกเลิกแบบประเมิน');
             cy.contains('button', 'Search').click();
@@ -44,7 +44,7 @@ describe('5.4.2 Cancel Assessment Failed ', () => {
 
         });
 
-        it('ADMINICDJUNIOR-SN-167 : สามารถยกเลิกแบบประเมินที่หน้าแบบประเมินทั้งหมดได้', () => {
+        it('ADMINICDJUNIOR-SN-167 : ไม่สามารถยกเลิกแบบประเมินที่หน้าแบบประเมินที่เลือกได้ เนื่องจากไม่ได้กรอกเหตุผลที่ทำการยกเลิกแบบประเมิน', () => {
             //ค้นหาแบบประเมินที่จะแก้ไข
             cy.get('#assessment_code').type('BCP_Test_สำหรับยกเลิกแบบประเมิน');
             cy.contains('button', 'Search').click();
